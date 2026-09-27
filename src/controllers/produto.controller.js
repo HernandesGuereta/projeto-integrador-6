@@ -1,31 +1,41 @@
 const service = require("../services/produto.service");
 
-exports.listar = (req, res) => {
-  const produtos = service.listar();
-
-  res.status(200).json(produtos);
+exports.listar = async (req, res) => {
+  const produtos = await service.listar();
+  return res.status(200).json(produtos);
 };
 
-exports.buscarPorId = (req, res) => {
-  const produto = service.buscarPorId(req.params.id);
+exports.buscarPorId = async (req, res) => {
+  const produto = await service.buscarPorId(req.params.id);
 
   if (!produto) {
-    return res.status(404).json({
-      mensagem: "Produto não encontrado",
-    });
+    return res.status(404).json({ mensagem: "Produto não encontrado" });
   }
 
-  res.status(200).json(produto);
+  return res.status(200).json(produto);
 };
 
-exports.criar = (req, res) => {
-  try {
-    const produto = service.criar(req.body);
+exports.criar = async (req, res) => {
+  const produto = await service.criar(req.body);
+  return res.status(201).json(produto);
+};
 
-    res.status(201).json(produto);
-  } catch (error) {
-    res.status(400).json({
-      mensagem: error.message,
-    });
+exports.atualizar = async (req, res) => {
+  const produto = await service.atualizar(req.params.id, req.body);
+
+  if (!produto) {
+    return res.status(404).json({ mensagem: "Produto não encontrado" });
   }
+
+  return res.status(200).json(produto);
+};
+
+exports.remover = async (req, res) => {
+  const removido = await service.remover(req.params.id);
+
+  if (!removido) {
+    return res.status(404).json({ mensagem: "Produto não encontrado" });
+  }
+
+  return res.status(204).send();
 };

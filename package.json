@@ -1,8 +1,28 @@
 {
-  "devDependencies": {
-    "nodemon": "^3.1.14"
+  "name": "projeto-integrador-6",
+  "version": "1.0.0",
+  "description": "API e interface para gerenciamento de produtos com Express, Sequelize e SQLite",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest --coverage --runInBand",
+    "test:watch": "jest --watch"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "sequelize": "^6.37.8",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.3.0"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
   }
 }

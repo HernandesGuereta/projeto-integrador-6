@@ -1,31 +1,60 @@
 const Produto = require("../models/produto.model");
 
-function listar() {
-  return produtos;
+function normalizarNome(nome) {
+  return typeof nome === "string" ? nome.trim() : nome;
 }
 
-function buscarPorId(id) {
-  return produtos.find((produto) => produto.id === Number(id));
+async function listar() {
+  return Produto.findAll({ order: [["id", "ASC"]] });
 }
 
-function criar(dados) {
-  if (!dados.nome || dados.preco == null) {
-    throw new Error("nome e preco são obrigatórios");
+async function buscarPorId(id) {
+  return Produto.findByPk(id);
+}
+
+async function criar(dados) {
+  return Produto.create({
+    nome: normalizarNome(dados.nome),
+    preco: dados.preco,
+  });
+}
+
+async function atualizar(id, dados) {
+  const produto = await buscarPorId(id);
+
+  if (!produto) {
+    return null;
   }
 
-const produto = new Produto({
-  id: produtos.length + 1,
-  nome: dados.nome,
-  preco: dados.preco,
-});
+  const atualizacoes = {};
 
-  produtos.push(produto);
+  if (dados.nome !== undefined) {
+    atualizacoes.nome = normalizarNome(dados.nome);
+  }
 
+  if (dados.preco !== undefined) {
+    atualizacoes.preco = dados.preco;
+  }
+
+  await produto.update(atualizacoes);
   return produto;
+}
+
+async function remover(id) {
+  const produto = await buscarPorId(id);
+
+  if (!produto) {
+    return false;
+  }
+
+  await produto.destroy();
+  return true;
 }
 
 module.exports = {
   listar,
   buscarPorId,
   criar,
+  atualizar,
+  remover,
 };

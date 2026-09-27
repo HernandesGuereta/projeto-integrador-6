@@ -1,12 +1,22 @@
-const express = require("express");
-const produtoRoutes = require("./routes/produto.routes");
+const app = require("./app");
+const sequelize = require("./config/database");
 
-const app = express();
+const porta = process.env.PORT || 3000;
 
-app.use(express.json());
+async function iniciarServidor() {
+  await sequelize.authenticate();
+  await sequelize.sync();
 
-app.use("/produtos", produtoRoutes);
+  return app.listen(porta, () => {
+    console.log(`Servidor disponível em http://localhost:${porta}`);
+  });
+}
 
-app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
-});
+if (require.main === module) {
+  iniciarServidor().catch((error) => {
+    console.error("Não foi possível iniciar o servidor:", error);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { iniciarServidor };
