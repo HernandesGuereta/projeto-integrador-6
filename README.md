@@ -1,6 +1,6 @@
 # Projeto Integrador VI — CRUD de produtos
 
-Aplicação web para cadastrar, consultar, editar e excluir produtos. O projeto usa Node.js e Express na API, Sequelize como ORM e SQLite como banco de dados relacional.
+Aplicação web escrita em **TypeScript** para cadastrar, consultar, editar e excluir produtos. O projeto usa Node.js e Express na API, Sequelize como ORM e SQLite como banco de dados relacional.
 
 ## Requisitos
 
@@ -14,12 +14,19 @@ npm install
 npm start
 ```
 
-Abra `http://localhost:3000` para usar a interface. O banco `database.sqlite` é criado automaticamente na primeira execução.
+O comando `npm start` compila o TypeScript e inicia o servidor. Abra `http://localhost:3000` para usar a interface. O banco `database.sqlite` é criado automaticamente na primeira execução.
 
 Durante o desenvolvimento, também é possível usar:
 
 ```bash
 npm run dev
+```
+
+Para apenas validar os tipos ou gerar os arquivos compilados:
+
+```bash
+npm run typecheck
+npm run build
 ```
 
 ## Testes e cobertura
@@ -51,10 +58,12 @@ Exemplo de corpo para criação ou atualização:
 
 ## Organização
 
-- `public`: interface web responsiva.
+- `src/client`: código TypeScript da interface web responsiva.
+- `public`: HTML e CSS da interface; o `app.js` é gerado pelo build.
 - `src/config`: conexão do Sequelize.
 - `src/models`: modelo relacional de produto.
 - `src/services`: regras e operações de persistência.
 - `src/controllers`: respostas HTTP.
 - `src/routes`: rotas do CRUD.
 - `tests`: testes de integração do CRUD e dos erros da API.
+

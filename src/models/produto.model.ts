@@ -1,8 +1,24 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from "sequelize";
+import sequelize from "../config/database";
 
-const Produto = sequelize.define(
-  "Produto",
+export default class Produto extends Model<
+  InferAttributes<Produto>,
+  InferCreationAttributes<Produto>
+> {
+  declare id: CreationOptional<number>;
+  declare nome: string;
+  declare preco: number;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
+}
+
+Produto.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -25,11 +41,14 @@ const Produto = sequelize.define(
         min: { args: [0], msg: "preço não pode ser negativo" },
       },
     },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   },
   {
+    sequelize,
+    modelName: "Produto",
     tableName: "produtos",
     timestamps: true,
   },
 );
 
-module.exports = Produto;
