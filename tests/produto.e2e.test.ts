@@ -1,8 +1,8 @@
-const request = require("supertest");
-const app = require("../src/app");
-const sequelize = require("../src/config/database");
-const Produto = require("../src/models/produto.model");
-const produtoService = require("../src/services/produto.service");
+import request from "supertest";
+import app from "../src/app";
+import sequelize from "../src/config/database";
+import Produto from "../src/models/produto.model";
+import * as produtoService from "../src/services/produto.service";
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
@@ -19,14 +19,12 @@ afterAll(async () => {
 describe("interface e informações da API", () => {
   test("serve a interface web", async () => {
     const resposta = await request(app).get("/");
-
     expect(resposta.status).toBe(200);
     expect(resposta.text).toContain("Gestão de produtos");
   });
 
   test("informa que a API está funcionando", async () => {
     const resposta = await request(app).get("/api");
-
     expect(resposta.status).toBe(200);
     expect(resposta.body.mensagem).toBe("API de produtos funcionando");
   });
@@ -90,7 +88,6 @@ describe("CRUD de produtos", () => {
 describe("validação e erros", () => {
   test("rejeita produto sem nome", async () => {
     const resposta = await request(app).post("/produtos").send({ preco: 10 });
-
     expect(resposta.status).toBe(400);
     expect(resposta.body.mensagem).toBe("Dados inválidos");
   });
@@ -108,19 +105,18 @@ describe("validação e erros", () => {
 
   test("retorna JSON para uma rota inexistente", async () => {
     const resposta = await request(app).get("/rota-inexistente");
-
     expect(resposta.status).toBe(404);
     expect(resposta.body.mensagem).toBe("Rota não encontrada");
   });
 
   test("trata erros inesperados sem expor detalhes internos", async () => {
     jest.spyOn(produtoService, "listar").mockRejectedValueOnce(new Error("falha simulada"));
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => undefined);
 
     const resposta = await request(app).get("/produtos");
-
     expect(resposta.status).toBe(500);
     expect(resposta.body.mensagem).toBe("Erro interno do servidor");
     expect(console.error).toHaveBeenCalled();
   });
 });
+

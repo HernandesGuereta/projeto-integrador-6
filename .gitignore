@@ -1,8 +1,11 @@
 node_modules/
+dist/
 coverage/
 .npm-cache/
+public/app.js
 database.sqlite
 database.sqlite-shm
 database.sqlite-wal
 .env
 *.log
+
